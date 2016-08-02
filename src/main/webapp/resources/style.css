@@ -1,0 +1,16 @@
+a.login {
+    position: relative;
+    top: 12px;
+    right: 15px;
+    color: beige;
+    font-family: "Arial", sans-serif;
+} h4 {
+    background-color: #5cb85c;
+    color:white !important;
+    text-align: center;
+    padding:25px 50px;
+}
+a.login-footer {
+    background-color: #f9f9f9;
+}
+
