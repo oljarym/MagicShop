@@ -2,6 +2,8 @@ package com.magicshop.repository;
 
 import com.magicshop.dao.UserDao;
 import com.magicshop.model.User;
+import org.apache.log4j.pattern.LogEvent;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import java.util.List;
 
 
 @Repository
-public class UserRepository implements UserDao{
+public class UserRepository implements UserDao {
 
     private JdbcTemplate jdbc;
 
@@ -31,7 +33,8 @@ public class UserRepository implements UserDao{
             user.setName(resultSet.getString("name"));
             user.setEmail(resultSet.getString("email"));
             user.setPassword(resultSet.getString("password"));
-            System.out.println(user);
+            user.setEnabled(resultSet.getBoolean("enabled"));
+            user.setAuthority(resultSet.getString("authority"));
             return user;
         });
     }
@@ -40,27 +43,41 @@ public class UserRepository implements UserDao{
 
     @Override
     public User findById(int id) {
-        return jdbc.queryForObject("SELECT * FROM users WHERE userId = ?",
-                new Object[]{id},
-                new BeanPropertyRowMapper<>(User.class));
+        try {
+            return jdbc.queryForObject("SELECT * FROM users WHERE userId = ?",
+                    new Object[]{id},
+                    new BeanPropertyRowMapper<>(User.class));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
     public User findByEmail(String email) {
-        return jdbc.queryForObject("SELECT * FROM users WHERE email = ?",
-                new Object[]{email},
-                new BeanPropertyRowMapper<>(User.class));
+        try {
+            return jdbc.queryForObject("SELECT * FROM users WHERE email = ?",
+                    new Object[]{email},
+                    new BeanPropertyRowMapper<>(User.class));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
     public boolean addUser(User user) {
-        return jdbc.update("INSERT INTO users (name, email, password, authority) values(?, ?, ?, ?)",
-                user.getName(), user.getEmail(), user.getPassword(), "ROLE_USER") == 1;
+        System.out.printf(user + "invoke addUser from user repo");
+        return jdbc.update("INSERT INTO users (name, email, password, enabled, authority) values(?, ?, ?, ?, ?)",
+                user.getName(), user.getEmail(), user.getPassword(), true, "ROLE_USER") == 1;
     }
 
     @Override
     public boolean disableUser(String email) {
         return jdbc.update("UPDATE users SET enabled = FALSE WHERE email = ?", email) == 1;
+    }
+
+    @Override
+    public boolean activateUser(String email) {
+        return jdbc.update("UPDATE users SET enabled = TRUE WHERE email = ?", email) == 1;
     }
 
     @Override
@@ -71,10 +88,17 @@ public class UserRepository implements UserDao{
 
     @Override
     public User findByOrder(int orderId) {
-        return (User) jdbc.queryForList("SELECT a.* FROM users a INNER JOIN" +
-                " `order` ON a.userId = `order`.userId  AND orderId=?",
-                        orderId, new BeanPropertyRowMapper<>(User.class));
+        try {
+            return (User) jdbc.queryForList("SELECT a.* FROM users a INNER JOIN" +
+                            " `order` ON a.userId = `order`.userId  AND orderId=?",
+                    orderId, new BeanPropertyRowMapper<>(User.class));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
+
+
+
 
 
 }

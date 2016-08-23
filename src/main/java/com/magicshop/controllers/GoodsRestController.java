@@ -42,7 +42,6 @@ public class GoodsRestController {
     @RequestMapping(value = "name/{name}", method = RequestMethod.GET)
     public ResponseEntity<Goods> getGoodsByName(@PathVariable String name) {
         Goods goods = goodsService.findByName(name);
-
         if (goods == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -62,6 +61,16 @@ public class GoodsRestController {
         }
         goodsService.update(goods, goodsId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "goodsId/{goodsId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> deleteGoods(@RequestBody Goods goods, @PathVariable int goodsId) {
+        if (goods == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        goodsService.delete(goods);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
 

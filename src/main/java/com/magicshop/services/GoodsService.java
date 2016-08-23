@@ -25,15 +25,15 @@ public class GoodsService {
         return goodsDao.findByName(name);
     }
 
-    public Goods findByPrice(double prise) {
-        return  goodsDao.findByPrice(prise);
-    }
 
     public boolean add(Goods goods) {
         return goodsDao.addGoods(goods);
     }
 
     public boolean update(Goods goods, int goodsId) {
+        if (goods.getQuantity() < 0) {
+            return false;
+        }
         return goodsDao.updateGoods(goods, goodsId);
     }
 

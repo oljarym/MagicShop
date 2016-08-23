@@ -10,67 +10,135 @@ $(document).ready(function () {
         var userName = $("#register-name").val();
         var userEmail = $("#register-email").val();
         var userPassword = $("#register-password").val();
-        var  userPasswordConfirm = $("#register-password-confirm").val();
 
-        if (userPassword == userPasswordConfirm) {
-            var jsonObject = {
-                "email": userEmail,
-                "name": userName,
-                "password": userPassword
-            };
             $.ajax({
-                type: "POST",
-                url: "http://localhost:8080/users/",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(jsonObject)
-            });
-            alert("New user was added!")
-        } else {
-            alert("Password is not the same!!!");
-        }
+                url: "http://localhost:8080/users/email/" + userEmail,
+                dataType: 'json',
+                statusCode: {
+                    406: function () {
+                        var jsonObject = {
+                            "email": userEmail,
+                            "name": userName,
+                            "password": userPassword
+                        };
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost:8080/users/",
+                            contentType: 'application/json; charset=utf-8',
+                            data: JSON.stringify(jsonObject),
+                            statusCode: {
+                                201: function () {
+                                    alert("Account was created");
+                                    window.location.assign("http://localhost:8080/login");
+                                },
+                                400: function () {
+                                    alert("Something is wrong. Failed");
+                                }
+                            }
+                        });
 
+                    },
+                    200: function () {
+                        alert("User with this email is already exist");
+                    }
+                }
+
+            });
     });
 
     
-    //Add New Goods
-    $("#new-goods-submit").click(function () {
-        var goodsName = $("#new-goods-name").val();
-        var goodsDescription = $("#new-goods-description").val();
-        var goodsQuantity = $("#new-goods-quantity").val();
-        var goodsPrice = $("#new-goods-price").val();
-
-        var newGoods = {
-            "name": goodsName,
-            "description": goodsDescription,
-            "quantity": goodsQuantity,
-            "price": goodsPrice
-        };
-
-        if (goodsName == "" || goodsDescription == "" || goodsPrice == "" || goodsQuantity == "") {
-            alert("Fill the fields");
-        } else {
-            $.ajax({
-                type: "POST",
-                url: "http://localhost:8080/goods/",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(newGoods)
-            }).then(function () {
-                var info = document.getElementById("new-goods-added");
-                info.innerHTML = "<h3>Goods has been added</h3>";
+    $.ajax({
+        url: 'http://localhost:8080/users/',
+        dataType: 'json',
+        success: function (data) {
+            $('#admin-users-list').bootstrapTable({
+                data: data
             });
+        },
+        error: function (e) {
+            console.log(e.responseText);
         }
     });
+
+    $('#admin-users-list').on('click-row.bs.table', function (e, row, $element) {
+        document.getElementById('current-user').innerHTML = '<span class="glyphicon glyphicon-user"></span> ' + row.name;
+        var fillTable = '<thead><tr><th>ID</th><th>Name</th>' +
+            '<th>Email</th><th>Enabled</th><th>Authority</th>' +
+            '</tr></thead>'+'<tbody><tr><td>'+ row.userId + '</td><td>' +
+            row.name + '</td><td>' +
+            row.email + '</td><td>' +
+            row.enabled + '</td><td>' +
+            row.authority + '</td></tr></tbody>';
+        $('#selected-user-for-change').html(fillTable);
+        $('#admin-user-modal').modal({
+            show: true
+        });
+        $('#change-user-active-submit').click(function () {
+            var action;
+            var massage;
+            if(row.enabled == true) {
+                action = "disable/id/";
+                massage = "disabled";
+            } else {
+                action = "activate/id/";
+                massage = "activated";
+            }
+            $.ajax({
+                type: "PUT",
+                url: "http://localhost:8080/users/" + action + row.userId,
+                statusCode: {
+                    204: function () {
+                        alert("User was " + massage);
+                    },
+                    400: function () {
+                        alert("Error occurred");
+                    }
+                }
+            });
+        });
+    });
+
+
 
     // All goods list
         $.ajax({
             url: 'http://localhost:8080/goods/',
             dataType: 'json',
             success: function (data) {
-                $('#all-goods-list').bootstrapTable({
+                var $table1 = $('#all-goods-list').bootstrapTable({
                     data: data
                 });
-                $('#admin-goods-list').bootstrapTable({
-                    data: data
+                var grepFunc1 = function () {
+                    return true;
+                };
+                $('#ok1').click(function () {
+                    var limit1 = $('#limit1').val();
+                    var offset1 = $('#offset1').val();
+
+                    if (limit1 == "" && offset1 == "") {
+                        grepFunc1 = function () {
+                            return true;
+                        };
+                    } else if (limit1 != "" && offset1 == "") {
+                        grepFunc1 = function (goods) {
+                            return goods.price >= limit1;
+                        };
+                    } else if (limit1 == "" && offset1 != "") {
+                        grepFunc1 = function (goods) {
+                            return goods.price <= offset1;
+                        };
+                    } else if (limit1 != "" && offset1 != "") {
+                        grepFunc1 = function (goods) {
+                            return (goods.price <= offset1 && goods.price >= limit1);
+                        };
+                    }
+                    $table1.bootstrapTable('load', $.grep(data, grepFunc1));
+                });
+                $('#reset1').click(function () {
+                    grepFunc = function () {
+                        return true;
+                    };
+                    $table1.bootstrapTable('load', $.grep(data, grepFunc));
                 });
             },
             error: function(e) {
@@ -78,34 +146,155 @@ $(document).ready(function () {
             }
         });
 
+
+    // new goods
+        $("#new-goods-submit").click(function () {
+            var goodsName = $("#new-goods-name").val();
+            var goodsDescription = $("#new-goods-description").val();
+            var goodsQuantity = $("#new-goods-quantity").val();
+            var goodsPrice = $("#new-goods-price").val();
+
+            var newGoods = {
+                "name": goodsName,
+                "description": goodsDescription,
+                "quantity": goodsQuantity,
+                "price": goodsPrice
+            };
+
+            if (goodsName == "" || goodsDescription == "" || goodsPrice == "" || goodsQuantity == "") {
+                 $('#action-error1').html('<p>Please, fill the field</p>').show();
+                return false;
+            } else if (goodsPrice < 0 || goodsQuantity < 1) {
+                $('#action-error1').html('<p>Please, fill the field</p>').show();
+                return false;
+
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/goods/",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(newGoods)
+                });
+                //$('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was created!</p>').show();
+                return true;
+            }
+        });
+
+
     // update and delete goods by admin
     $('#admin-goods-list').on('click-row.bs.table', function (e, row, $element) {
+        var fillTable = '<thead><tr><th>ID</th><th>Name</th>' +
+            '<th>Description</th><th>Quantity</th><th>Price</th>' +
+            '</tr></thead>'+'<tbody><tr><td>'+ row.goodsId + '</td><td>' +
+                row.name + '</td><td>' +
+                row.description + '</td><td>' +
+                row.quantity + '</td><td>' +
+                row.price + '</td></tr></tbody>';
+        $('#selected-goods').html(fillTable); // show row with selected goods
+        // filing  field current values
+        document.getElementById('new-name').value = row.name;
+        document.getElementById('new-description').value = row.description;
+        document.getElementById('new-quantity').value = row.quantity;
+        document.getElementById('new-price').value = row.price;
         $('#UD-modal-admin').modal({
             show: true
         });
-        var goodsId = row.goodsId;
-        $("#update-goods").click(function (goodsId) {
-            $('#update-goods-modal').modal( {
-                show: true
-            })
-        })
+        var currentGoods = {
+            "goodsId": row.goodsId,
+            "name": row.name,
+            "description": row.description,
+            "quantity":  row.quantity,
+            "price": row.price
+        };
+
+        $('#update-goods-submit').click(function () {
+
+            var goodsId = row.goodsId;
+            var newGoodsName = $('#new-name').val();
+            var newGoodsDescription = $('#new-description').val();
+            var newGoodsQuantity = $('#new-quantity').val();
+            var newGoodsPrice = $('#new-price').val();
+
+                var updatedGoods = {
+                        "name": newGoodsName,
+                        "description": newGoodsDescription,
+                        "quantity": newGoodsQuantity,
+                        "price": newGoodsPrice
+                };
+                $.ajax({
+                    type: "PUT",
+                    url: "http://localhost:8080/goods/goodsId/" + goodsId,
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(updatedGoods)
+                });
+                $('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was updated!</p>').show();
+                return false;
+
+        });
+
+        // Create new goods
+        $('#delete-goods-submit').click(function () {
+            $.ajax({
+                type: "DELETE",
+                url: "http://localhost:8080/goods/goodsId/" + row.goodsId,
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(currentGoods)
+            });
+            $('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was deleted!</p>').show();
+            return false;
+        });
+
 
     });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Order goods for users
     $('#all-goods-list').on('click-row.bs.table', function (e, row, $element) {
+        var fillTable = '<thead><tr><th>ID</th><th>Name</th>' +
+            '<th>Description</th><th>Quantity</th><th>Price</th>' +
+            '</tr></thead>'+'<tbody><tr><td>'+ row.goodsId + '</td><td>' +
+            row.name + '</td><td>' +
+            row.description + '</td><td>' +
+            row.quantity + '</td><td>' +
+            row.price + '</td></tr></tbody>';
+        $('#selected-goods-for-order').html(fillTable); // show row with selected goods
+
+        var quantity = $('#quantity').val();
+        var money = $("#money").html(quantity*row.price);
+        // create order
         $("#order-modal").modal({
                 show: true
             }
         );
-        var userId = $("#id-user").val();
-        var goodsId = row.goodsId;
+
+        document.getElementById("quantity").addEventListener("change", function () {
+            var quantity = $('#quantity').val();
+            $("#money").html( quantity*row.price);
+        });
+
         $("#order-it").click(function () {
-            var money = $("#money").val();
-            if (money == row.price) {
+            var userId = $("#id-user").val();
+            var goodsId = row.goodsId;
+            var finalQuantity = $('#quantity').val();
+
+            if((finalQuantity > 0) && (finalQuantity <= row.quantity)) {
                 var newOrder = {
                     "userId": userId,
-                    "goodsId": goodsId
+                    "goodsId": goodsId,
+                    "quantity": finalQuantity
                 };
                 $.ajax({
                     type: "POST",
@@ -114,12 +303,11 @@ $(document).ready(function () {
                     data: JSON.stringify(newOrder)
                 });
                 $("#orderSuccess").show();
-
             } else {
                 $("#orderError").show();
             }
-        });
 
+        });
     });
 
 
@@ -130,32 +318,10 @@ $(document).ready(function () {
 
     //Validation of register form
     //noinspection JSUnresolvedFunction
-    $("#register-form").validate({
-        rules: {
-            name: {
-                required: true,
-                minlength: 4,
-                maxlength: 50
-            },
-            email: {
-                required: true,
-                email: true
-            },
-            password1: {
-                required: true,
-                minlength: 4,
-                maxlength: 20
-            },
-            password2: {
-                required: true,
-                minlength: 4,
-                maxlength: 20
-            }
-        }
-    });
+
+
+
 });
-
-
 
 
 

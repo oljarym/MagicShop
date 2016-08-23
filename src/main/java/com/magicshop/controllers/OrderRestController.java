@@ -2,12 +2,15 @@ package com.magicshop.controllers;
 
 import com.magicshop.model.Order;
 
+import com.magicshop.model.UserOrders;
 import com.magicshop.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
@@ -42,6 +45,16 @@ public class OrderRestController {
     public ResponseEntity<Void> createOrder(@RequestBody Order order) {
         orderService.addOrder(order);
       return new ResponseEntity<>(HttpStatus.CREATED);
+  }
+  @RequestMapping(value = "userId/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<UserOrders>> findAllUserOrders(@PathVariable int userId) {
+      List<UserOrders> userOrders = orderService.findAllUserOrders(userId);
+      if (userOrders == null) {
+          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      System.out.println(userOrders);
+      return new ResponseEntity<>(userOrders, HttpStatus.OK);
   }
 
 

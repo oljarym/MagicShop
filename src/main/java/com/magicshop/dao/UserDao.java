@@ -20,4 +20,6 @@ public interface UserDao {
 
     boolean updateUser(User user);
 
+    boolean activateUser(String email);
+
 }

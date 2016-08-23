@@ -2,6 +2,8 @@ package com.magicshop.repository;
 
 import com.magicshop.dao.OrderDao;
 import com.magicshop.model.Order;
+import com.magicshop.model.UserOrders;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,6 +53,27 @@ public class OrderRepository implements OrderDao {
    return findOrderList("SELECT * FROM `order` WHERE goodsId = ?");
    }
    */
+    @Override
+   public List<UserOrders> findAllUserOrders(int userId) {
+
+        try {
+            return jdbc.query("SELECT goods.name, quantity, quantityGoods FROM goods INNER JOIN" +
+                            "  (SELECT `order`.goodsId, `order`.quantity AS quantityGoods, COUNT(*) AS quantity" +
+                            "   FROM `order` WHERE `order`.userId=?" +
+                            "   GROUP BY quantityGoods ORDER BY goodsId) AS goodsOrders" +
+                            "WHERE goods.goodsId = goodsOrders.goodsId;",
+                    new Object[]{userId},(resultSet, i) -> {
+                UserOrders userOrders = new UserOrders();
+                userOrders.setGoodsName(resultSet.getString("name"));
+                userOrders.setQuantity(resultSet.getInt("quantityquantity"));
+                userOrders.setQuantityGoods(resultSet.getInt("quantityGoods"));
+                return userOrders;
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
+   }
 
     @Override
     public Order findByUserAndGoods(int userId, int goodsId) {
@@ -72,15 +95,15 @@ public class OrderRepository implements OrderDao {
             order.setUserId(resultSet.getInt("userId"));
             order.setGoodsId(resultSet.getInt("goodsId"));
             order.setPaidUp(resultSet.getBoolean("isPaidUp"));
+            order.setQuantity(resultSet.getInt("quantity"));
             return order;
         });
     }
 
     public boolean addOrder(Order order) {
 
-
-        return jdbc.update("INSERT INTO `order` (userId, goodsId, isPaidUp) values(?, ?, ?)",
-                order.getUserId(), order.getGoodsId(), order.isPaidUp()) == 1;
+        return jdbc.update("INSERT INTO `order` (userId, goodsId, isPaidUp, quantity) values(?, ?, ?, ?)",
+                order.getUserId(), order.getGoodsId(), order.isPaidUp(), order.getQuantity()) == 1;
     }
 
 

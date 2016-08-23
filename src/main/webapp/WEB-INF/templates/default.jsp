@@ -33,6 +33,14 @@
 </div>
 <br/>
 <div class="body">
+    <style>
+        body {
+            font: 400 15px/1.8 Lato, sans-serif;
+            color: #777;
+
+        }
+
+    </style>
     <tiles:insertAttribute name="body"/>
 </div>
 <hr>

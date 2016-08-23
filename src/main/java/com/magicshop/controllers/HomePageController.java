@@ -43,9 +43,26 @@ public class HomePageController {
         return "personalRoom";
     }
 
-    @RequestMapping(value = "/newGoods")
-    public String showNewGoodsPage() {
-        return "newGoods";
+
+    @RequestMapping(value = "/allGoods")
+    public String showGoodsListForAdmin() {
+        return "allGoods";
+    }
+
+    @RequestMapping(value = "/allUsers")
+    public String showUsersListForAdmin() {return "users";}
+
+    @RequestMapping(value = "/myOrders")
+    public String showShopListForUser(Model model, Principal principal) {
+        if(principal == null) {
+            return "login";
+        }
+        int idUser = userService.findByEmail(principal.getName()).getUserId();
+        String userEmail = principal.getName();
+        model.addAttribute("idUser", idUser);
+        model.addAttribute("userEmail", userEmail);
+        return "myOrders";
     }
 
 }
+

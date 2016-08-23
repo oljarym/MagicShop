@@ -4,6 +4,7 @@ package com.magicshop.services;
 import com.magicshop.dao.OrderDao;
 import com.magicshop.model.Goods;
 import com.magicshop.model.Order;
+import com.magicshop.model.UserOrders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +35,16 @@ public class OrderService {
          {
             order.setPaidUp(true);
             Goods goods = goodsService.findById(order.getGoodsId());
-            int newQuantity = ((int) goods.getQuantity()) - 1;
+             //// TODO: 22.08.2016  
+            int newQuantity = (goods.getQuantity()) - order.getQuantity();
             goods.setQuantity(newQuantity);
             goodsService.update(goods, goods.getGoodsId());
             return orderDao.addOrder(order);
         }
+    }
+
+    public List<UserOrders> findAllUserOrders(int userId) {
+        return orderDao.findAllUserOrders(userId);
     }
 
     public Order findByUserAndGoods(int userId, int goodsId) {

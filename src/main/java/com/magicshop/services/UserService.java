@@ -34,6 +34,14 @@ public class UserService {
         return userDao.findByOrder(orderId);
     }
 
+    public boolean disableUser(User user) {
+        return userDao.disableUser(user.getEmail());
+    }
+
+    public boolean activateUser(User user) {
+        return userDao.activateUser(user.getEmail());
+    }
+
 
 
 }

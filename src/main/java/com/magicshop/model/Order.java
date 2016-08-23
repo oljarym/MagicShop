@@ -7,6 +7,15 @@ public class Order {
     private int userId;
     private int goodsId;
     private boolean isPaidUp;
+    private int quantity;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public int getOrderId() {
         return orderId;
@@ -50,7 +59,8 @@ public class Order {
         if (getOrderId() != order.getOrderId()) return false;
         if (getUserId() != order.getUserId()) return false;
         if (getGoodsId() != order.getGoodsId()) return false;
-        return isPaidUp() == order.isPaidUp();
+        if (isPaidUp() != order.isPaidUp()) return false;
+        return getQuantity() == order.getQuantity();
 
     }
 
@@ -60,6 +70,7 @@ public class Order {
         result = 31 * result + getUserId();
         result = 31 * result + getGoodsId();
         result = 31 * result + (isPaidUp() ? 1 : 0);
+        result = 31 * result + getQuantity();
         return result;
     }
 
@@ -70,6 +81,7 @@ public class Order {
                 ", userId=" + userId +
                 ", goodsId=" + goodsId +
                 ", isPaidUp=" + isPaidUp +
+                ", quantity=" + quantity +
                 '}';
     }
 }

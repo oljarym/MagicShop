@@ -2,6 +2,7 @@ package com.magicshop.repository;
 
 import com.magicshop.dao.GoodsDao;
 import com.magicshop.model.Goods;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,21 +40,32 @@ public class GoodsRepository implements GoodsDao {
 
     @Override
     public Goods findById(int goodsId) {
-        return jdbc.queryForObject("SELECT * FROM goods WHERE goodsId = ?",
-             new Object[]{goodsId},
-             new BeanPropertyRowMapper<>(Goods.class));
+        try {
+            return jdbc.queryForObject("SELECT * FROM goods WHERE goodsId = ?",
+                    new Object[]{goodsId},
+                    new BeanPropertyRowMapper<>(Goods.class));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
     }
 
     @Override
     public Goods findByName(String name) {
-        return jdbc.queryForObject("SELECT * FROM goods WHERE name= ?",
-                new Object[]{name}, 
-                new  BeanPropertyRowMapper<> (Goods.class));
+        try {
+            return jdbc.queryForObject("SELECT * FROM goods WHERE name= ?",
+                    new Object[]{name},
+                    new  BeanPropertyRowMapper<> (Goods.class));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
     }
 
 
     @Override
     public Goods findByPrice(double price) {
+        //TODO GHVHJVGJKJNHBB
         return null; // перевизначити коли все запрацює
     }
 
@@ -75,8 +87,8 @@ public class GoodsRepository implements GoodsDao {
 
     @Override
     public boolean deleteGoods(Goods goods) {
-        return jdbc.update("delete * from goods where goodsId = ",
-                goods.getGoodsId())==1;
+        System.out.printf("invoke delete goods");
+        return jdbc.update("delete from goods where goodsId = ?",goods.getGoodsId()) == 1;
     }
 
 
