@@ -6,11 +6,9 @@ $(document).ready(function () {
     
     //Register new user to DB via REST
     $("#register-submit").click(function () {
-
         var userName = $("#register-name").val();
         var userEmail = $("#register-email").val();
         var userPassword = $("#register-password").val();
-
             $.ajax({
                 url: "http://localhost:8080/users/email/" + userEmail,
                 dataType: 'json',
@@ -29,7 +27,7 @@ $(document).ready(function () {
                             statusCode: {
                                 201: function () {
                                     alert("Account was created");
-                                    window.location.assign("http://localhost:8080/login");
+
                                 },
                                 400: function () {
                                     alert("Something is wrong. Failed");
@@ -95,6 +93,7 @@ $(document).ready(function () {
                     }
                 }
             });
+            location.reload(true);
         });
     });
 
@@ -102,7 +101,7 @@ $(document).ready(function () {
 
     // All goods list
         $.ajax({
-            url: 'http://localhost:8080/goods/',
+            url: 'http://localhost:8080/goods/available',
             dataType: 'json',
             success: function (data) {
                 var $table1 = $('#all-goods-list').bootstrapTable({
@@ -146,7 +145,6 @@ $(document).ready(function () {
             }
         });
 
-
     // new goods
         $("#new-goods-submit").click(function () {
             var goodsName = $("#new-goods-name").val();
@@ -160,23 +158,32 @@ $(document).ready(function () {
                 "quantity": goodsQuantity,
                 "price": goodsPrice
             };
-
             if (goodsName == "" || goodsDescription == "" || goodsPrice == "" || goodsQuantity == "") {
-                 $('#action-error1').html('<p>Please, fill the field</p>').show();
-                return false;
-            } else if (goodsPrice < 0 || goodsQuantity < 1) {
                 $('#action-error1').html('<p>Please, fill the field</p>').show();
                 return false;
-
+            } else if (goodsPrice < 0 || goodsQuantity < 1) {
+                $('#action-error1').html('<p>Please, enter correct data</p>').show();
+                return false;
             } else {
+
                 $.ajax({
-                    type: "POST",
-                    url: "http://localhost:8080/goods/",
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(newGoods)
+                    url: 'http://localhost:8080/goods/name/' + goodsName,
+                    dataType: 'json',
+                    statusCode: {
+                        204: function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "http://localhost:8080/goods/",
+                                contentType: 'application/json; charset=utf-8',
+                                data: JSON.stringify(newGoods)
+                            });
+                            location.reload(true);
+                        },
+                        200: function () {
+                            $('#action-error1').html('<p>Goods with this name is already exist</p>').show();
+                        }
+                    }
                 });
-                //$('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was created!</p>').show();
-                return true;
             }
         });
 
@@ -208,27 +215,27 @@ $(document).ready(function () {
         };
 
         $('#update-goods-submit').click(function () {
-
             var goodsId = row.goodsId;
             var newGoodsName = $('#new-name').val();
             var newGoodsDescription = $('#new-description').val();
             var newGoodsQuantity = $('#new-quantity').val();
             var newGoodsPrice = $('#new-price').val();
 
-                var updatedGoods = {
-                        "name": newGoodsName,
-                        "description": newGoodsDescription,
-                        "quantity": newGoodsQuantity,
-                        "price": newGoodsPrice
-                };
-                $.ajax({
-                    type: "PUT",
-                    url: "http://localhost:8080/goods/goodsId/" + goodsId,
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(updatedGoods)
-                });
-                $('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was updated!</p>').show();
-                return false;
+            var updatedGoods = {
+                "name": newGoodsName,
+                "description": newGoodsDescription,
+                "quantity": newGoodsQuantity,
+                "price": newGoodsPrice
+            };
+            $.ajax({
+                type: "PUT",
+                url: "http://localhost:8080/goods/goodsId/" + goodsId,
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(updatedGoods)
+            });
+            $('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was updated!</p>' +
+                '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>').show();
+            location.reload(true);
 
         });
 
@@ -240,26 +247,12 @@ $(document).ready(function () {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(currentGoods)
             });
-            $('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was deleted!</p>').show();
-            return false;
+            $('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was deleted!</p>' +
+                '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>').show();
+            location.reload(true);
         });
 
-
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //Order goods for users
     $('#all-goods-list').on('click-row.bs.table', function (e, row, $element) {
@@ -282,7 +275,7 @@ $(document).ready(function () {
 
         document.getElementById("quantity").addEventListener("change", function () {
             var quantity = $('#quantity').val();
-            $("#money").html( quantity*row.price);
+            $("#money").html( quantity * row.price);
         });
 
         $("#order-it").click(function () {
@@ -306,20 +299,10 @@ $(document).ready(function () {
             } else {
                 $("#orderError").show();
             }
-
+            location.reload(true);
         });
+
     });
-
-
-
-
-
-
-
-    //Validation of register form
-    //noinspection JSUnresolvedFunction
-
-
 
 });
 

@@ -1,5 +1,5 @@
 package com.magicshop.model;
-
+//
 
 public class Order {
 

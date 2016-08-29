@@ -1,7 +1,6 @@
 <script>
     $(document).ready(function () {
         $('#register-modal').modal();
-
         $('#register-form').bootstrapValidator({
             err: {
                 container: '#messages'

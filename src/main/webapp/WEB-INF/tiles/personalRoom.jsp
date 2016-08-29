@@ -1,13 +1,11 @@
-<script>
 
-</script>
 
 <div class="container">
 
 
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="/personalRoom">Goods list</a></li>
-        <li><a href="/myOrders">My orders</a></li>
+        <li class="active"><a data-toggle="tab" href="${pageContext.request.contextPath}/personalRoom">Goods list</a></li>
+        <li><a href="${pageContext.request.contextPath}/myOrders" id="user-orders">My orders</a></li>
     </ul>
 
 
@@ -38,7 +36,7 @@
             <button id="reset1" type="submit" class="btn btn-danger btn-default">Reset filter</button>
         </div>
     </div>
-    <table id="all-goods-list" class="table table-bordered"
+    <table id="all-goods-list" class="table table-sm"
            data-unique-id="goodsId"
            data-search="true"
            data-pagination="true"
@@ -56,16 +54,13 @@
 
     <div class="modal fade" id="order-modal" role="dialog">
     <div class="modal-dialog">
-
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Payment for goods</h4>
             </div>
             <div class="modal-body">
-
                 <table id="selected-goods-for-order" class="table table-bordered"></table>
-
                     <div class="form-group" >
                         <label for="quantity">Quantity</label>
                         <input class="form-control" type="number" id="quantity" value="1" min="1">
@@ -86,46 +81,7 @@
 
     </div>
 </div>
-
-
-    <div class="my-orders">
-
-        <table id="my-orders-list" class="table table-bordered"
-               data-search="true"
-               data-query-params="queryParams">
-            <thead>
-            <tr>
-                <th data-field="goodsName" data-sortable="true">Name</th>
-                <th data-field="quantity"  data-sortable="true">Quantity of orders</th>
-                <th data-field="quantityGoods" data-sortable="true">Quantity of goods</th>
-            </tr>
-            </thead>
-        </table>
-
-
-    </div>
-
-
-
-
-
-
 </div>
-<script>
-    var userId;
-    userId = $('#id-user').val();
-    $.ajax({
-        url: 'http://localhost:8080/orders/userId/'+ 2,
-        success: function (data) {
-            $('#my-orders-list').bootstrapTable({
-                data: data
-            });
-        }, error: function(e) {
-            console.log(e.responseText);
-        }});
-    alert(userId);
-</script>
-
 
 
 

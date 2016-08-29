@@ -2,7 +2,6 @@ package com.magicshop.repository;
 
 import com.magicshop.dao.UserDao;
 import com.magicshop.model.User;
-import org.apache.log4j.pattern.LogEvent;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

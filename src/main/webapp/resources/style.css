@@ -1,35 +1,20 @@
-a.login {
-    position: relative;
-    top: 12px;
-    right: 15px;
-    color: beige;
-    font-family: "Arial", sans-serif;
-} /*h4 {
-    background-color: #5cb85c;
-    color:white !important;
-    text-align: center;
-    padding:20px 50px;
-}
-  h3 {
-      background-color: darkblue;
-      color:white !important;
-      text-align: center;
-      padding:30px 50px;
-  }*/
-a.login-footer {
-    background-color: #f9f9f9;
-}
+
+
+
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-    background-color: darkred;
+    /* background-color: #F1C40F; */
+    background: #2fe2bf;
     cursor: pointer;
-    color: whitesmoke;
+    color: #111111;
+}
+
+.table-hover {
+    background-color: #1abc9c;
+    color: #111110;
 }
 
 
-.btn-info {
-    background: #37BC9B;
-    color: #ffffff;
-}
+
 
 .navbar {
     font-family: Montserrat, sans-serif;
@@ -57,12 +42,6 @@ a.login-footer {
     color: #fff;
     background-color: #555 !important;
 }
-.dropdown-menu li a {
-    color: #000 !important;
-}
-.dropdown-menu li a:hover {
-    background-color: red !important;
-}
 
 .modal-header, h4, .close {
     background-color: #333;
@@ -88,8 +67,10 @@ a.login-footer {
 }
 h3, h4 {
     margin: 10px 0 30px 0;
-    letter-spacing: 10px;
+    letter-spacing: 8px;
     font-size: 20px;
     color: #111;
 }
+
+
 

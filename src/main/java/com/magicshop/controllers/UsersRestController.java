@@ -17,8 +17,12 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 @RestController
 public class UsersRestController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UsersRestController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> listOfAllUsers() {
@@ -48,7 +52,7 @@ public class UsersRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
+    //
     @RequestMapping(value = "/email/{email}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> findUserByEmail(@PathVariable String email) {
         User user = userService.findByEmail(email);

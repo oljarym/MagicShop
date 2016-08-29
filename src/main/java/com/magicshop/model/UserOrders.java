@@ -9,14 +9,6 @@ public class UserOrders {
     private int quantity;
     private int quantityGoods;
 
-    public UserOrders(String goodsName, int quantity, int quantityGoods) {
-        this.goodsName = goodsName;
-        this.quantity = quantity;
-        this.quantityGoods = quantityGoods;
-    }
-
-    public UserOrders() {}
-
     public int getQuantityGoods() {
         return quantityGoods;
     }

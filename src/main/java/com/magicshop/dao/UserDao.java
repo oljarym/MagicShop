@@ -18,7 +18,7 @@ public interface UserDao {
 
     User findByOrder(int orderId);
 
-    boolean updateUser(User user);
+    boolean updateUser(User user); //later
 
     boolean activateUser(String email);
 

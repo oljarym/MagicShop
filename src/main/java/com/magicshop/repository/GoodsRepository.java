@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
+
 import javax.sql.DataSource;
 
 import java.util.List;
@@ -25,15 +26,32 @@ public class GoodsRepository implements GoodsDao {
         this.jdbc = new JdbcTemplate(jdbc);
     }
 
+
+    @Override
+    public List<Goods> getSaleGoodsList() {
+        return this.findGoodsList("SELECT * FROM goods WHERE quantity > 0 AND salePrice != 0 ORDER BY quantity");
+    }
+
+    @Override
+    public List<Goods> findAllAvailableGoods() {
+        return this.findGoodsList("SELECT * FROM goods WHERE quantity > 0 ORDER BY quantity");
+    }
+
     @Override
     public List<Goods> findAll() {
-        return jdbc.query("select * from goods", (resultSet, i) -> {
+        return this.findGoodsList("select * from goods");
+    }
+
+
+    private List<Goods> findGoodsList(String sql) {
+        return jdbc.query(sql, (resultSet, i) -> {
             Goods goods = new Goods();
             goods.setGoodsId(resultSet.getInt("goodsId"));
             goods.setName(resultSet.getString("name"));
             goods.setDescription(resultSet.getString("description"));
             goods.setQuantity(resultSet.getInt("quantity"));
             goods.setPrice(resultSet.getDouble("price"));
+            goods.setSalePrice(resultSet.getDouble("salePrice"));
             return goods;
         });
     }
@@ -62,38 +80,26 @@ public class GoodsRepository implements GoodsDao {
 
     }
 
-
-    @Override
-    public Goods findByPrice(double price) {
-        //TODO GHVHJVGJKJNHBB
-        return null; // перевизначити коли все запрацює
-    }
-
     @Override
     public boolean addGoods(Goods goods) {
-        return jdbc.update("INSERT INTO goods (name, description, quantity, price)" +
-                        " VALUES (?, ?, ?, ?)",
+        return jdbc.update("INSERT INTO goods (name, description, quantity, price, salePrice)" +
+                        " VALUES (?, ?, ?, ?, ?)",
                 goods.getName(), goods.getDescription(),
-                goods.getQuantity(), goods.getPrice())==1;
+                goods.getQuantity(), goods.getPrice(), goods.getSalePrice())==1;
     }
 
     @Override
     public boolean updateGoods(Goods goods, int goodsId) {
-        return jdbc.update("UPDATE goods SET name = ?, description = ?, quantity = ?, price = ?" +
-                        " WHERE goodsId = ?",
+        return jdbc.update("UPDATE goods SET name = ?, description = ?, quantity = ?, price = ?, " +
+                         "salePrice = ?  WHERE goodsId = ?",
                 goods.getName(), goods.getDescription(),
-                goods.getQuantity(), goods.getPrice(), goodsId)==1;
+                goods.getQuantity(), goods.getPrice(), goods.getSalePrice(), goodsId)==1;
     }
 
     @Override
     public boolean deleteGoods(Goods goods) {
-        System.out.printf("invoke delete goods");
         return jdbc.update("delete from goods where goodsId = ?",goods.getGoodsId()) == 1;
     }
 
-
-
-
-
 }
-
+//

@@ -11,11 +11,20 @@ import java.security.Principal;
 @Controller
 public class HomePageController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public HomePageController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping(value = "/")
-    public String showHomePage() {
+    public String showHomePage(Model model, Principal principal) {
+        if (principal == null) {
+            return "home";
+        }
+        int idUser = userService.findByEmail(principal.getName()).getUserId();
+        model.addAttribute("idUser", idUser);
         return "home";
     }
 
@@ -58,9 +67,7 @@ public class HomePageController {
             return "login";
         }
         int idUser = userService.findByEmail(principal.getName()).getUserId();
-        String userEmail = principal.getName();
         model.addAttribute("idUser", idUser);
-        model.addAttribute("userEmail", userEmail);
         return "myOrders";
     }
 

@@ -180,29 +180,52 @@
     });
 </script>
 
+<style>
+
+
+    .flat-butt {
+        width: 400px;
+        display: inline-block;
+        margin: 0 5px;
+        border-radius: 6px;
+        font-family: "Lato", sans-serif;
+        font-size: 16.5px;
+        padding: 12px 20px;
+        border: 0;
+        background: #34495E;
+        color: #FFF;
+        cursor: pointer;
+        outline: 0;
+    }
+    .flat-butt:hover {
+        background: #005580;
+    }
+    .flat-primary-butt {
+        background: #1abc9c;
+    }
+    .flat-primary-butt:hover {
+        background: #2fe2bf;
+    }
+</style>
+
+
 
 <div class="container">
 
-    <div class="alert alert-success fade in" id="action-success" style="display:none;">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    </div>
-    <div class="alert alert-danger fade in" id="action-error" style="display:none;">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    </div>
-
-    <input type="submit" class="btn btn-info btn-lg show-modal" id="createBTN" value="Create new goods"/>
-
+    <br/>
+    <center><input type="submit" class="flat-butt flat-primary-butt show-modal" id="createBTN" value="Create new goods"/></center>
+    <br/>
 
     <div id="toolbar">
 
         <div class="form-inline" role="form">
 
             <div class="form-group">
-                <span>Min: </span>
+                <span>Min price: </span>
                 <input id="limit" class="form-control w70" type="number" value="0">
             </div>
             <div class="form-group">
-                <span>Max: </span>
+                <span>Max price: </span>
                 <input id="offset" class="form-control w70" type="number" value="100">
             </div>
             <button id="ok" type="submit" class="btn btn-default">OK</button>
@@ -210,20 +233,19 @@
         </div>
     </div>
 <table id="admin-goods-list"
-       class="table table-bordered"
+       class="table table-sm"
        data-search="true"
        data-toolbar="#toolbar"
        data-pagination="true"
-       data-show-footer="false"
-       data-height="550"
-       data-page-list="[10, 20, 50, 100]">
+       data-show-footer="false">
     <thead>
     <tr>
-        <th data-field="goodsId"  data-visible="false">ID</th>
+        <th data-field="goodsId"  data-visible="true" data-sortable="true">ID</th>
         <th data-field="name" data-visible="true" data-sortable="true" data-sort-name="name" data-click-to-select="true">Name</th>
         <th data-field="description" data-visible="true">Description</th>
         <th data-field="quantity" data-visible="true" data-sortable="true">Quantity</th>
         <th data-field="price" data-visible="true" data-sortable="true">Price</th>
+        <th data-field="salePrice" data-visible="true" data-sortable="true">Sale Goods</th>
     </tr>
     </thead>
 </table>
@@ -285,9 +307,6 @@
             <h4 class="modal-title">Goods Editor</h4>
         </div>
         <div class="modal-body">
-
-
-
             <p>Please, make you`r choice</p>
             <table id="selected-goods" class="table table-bordered"></table>
 
@@ -296,34 +315,6 @@
             <button type="button"  data-target="#update-goods" class="btn btn-primary toggle-btn" data-toggle="collapse" data-parent="#UD-modal-admin">Update goods</button>
             <button type="button"  data-target="#delete-goods" class="btn btn-danger toggle-btn" data-toggle="collapse" data-parent="#UD-modal-admin">Delete goods</button>
             </div>
-
-         <!--div id="create-goods" class="collapse">
-                <p>Please, enter ALL field for updating information in data base</p>
-                <div id="new-goods-form">
-                <form role="form" >
-                    <div class="form-group">
-                        <label for="new-name">New Name</label>
-                        <input type="text" id="new-goods-name" name="newGoodsName" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="new-description">New Description</label>
-                        <input type="text" id="new-goods-description"  name="newGoodsDescription" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="new-quantity">Quantity</label>
-                        <input type="number" id="new-goods-quantity" name="newGoodsQuantity" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="new-price">Price</label>
-                        <input type="number" id="new-goods-price" name="newGoodsPrice" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <div id="massages"></div>
-                    </div>
-                    <button type="submit" class="btn btn-success"  id="new-goods-submit">CREATE GOODS</button>
-                </form>
-                </div>
-            </div> -->
 
             <div id="update-goods" class="collapse">
                 <p>Please, enter ALL field for updating information about selected goods</p>

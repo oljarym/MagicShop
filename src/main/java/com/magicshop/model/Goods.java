@@ -1,13 +1,16 @@
 package com.magicshop.model;
 
 
-public class Goods {
+import javax.validation.constraints.NotNull;
+
+public class Goods implements Comparable<Goods>{
 
     private int goodsId;
     private String name;
     private String description;
     private int quantity;
     private double price;
+    private double salePrice;
 
     public Goods() {}
 
@@ -51,6 +54,20 @@ public class Goods {
         this.price = price;
     }
 
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    @Override
+    public int compareTo(Goods goods) {
+        int compareQuantity = goods.getQuantity();
+        return this.quantity - compareQuantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,6 +78,7 @@ public class Goods {
         if (getGoodsId() != goods.getGoodsId()) return false;
         if (getQuantity() != goods.getQuantity()) return false;
         if (Double.compare(goods.getPrice(), getPrice()) != 0) return false;
+        if (Double.compare(goods.getSalePrice(), getSalePrice()) != 0) return false;
         if (!getName().equals(goods.getName())) return false;
         return getDescription().equals(goods.getDescription());
 
@@ -76,6 +94,8 @@ public class Goods {
         result = 31 * result + getQuantity();
         temp = Double.doubleToLongBits(getPrice());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getSalePrice());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
@@ -87,6 +107,8 @@ public class Goods {
                 ", description='" + description + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
+                ", salePrice=" + salePrice +
                 '}';
     }
+    //
 }

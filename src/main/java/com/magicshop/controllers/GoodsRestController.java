@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,13 +15,16 @@ import java.util.List;
 @RequestMapping(value = "/goods/")
 public class GoodsRestController {
 
+    private final GoodsService goodsService;
+
     @Autowired
-    private GoodsService goodsService;
+    public GoodsRestController(GoodsService goodsService) {
+        this.goodsService = goodsService;
+    }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Goods>> getAllGoods() {
         List<Goods> goodsList = goodsService.findAll();
-
         if (goodsList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -39,7 +40,7 @@ public class GoodsRestController {
         return new ResponseEntity<>(goods, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "name/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
     public ResponseEntity<Goods> getGoodsByName(@PathVariable String name) {
         Goods goods = goodsService.findByName(name);
         if (goods == null) {
@@ -50,8 +51,11 @@ public class GoodsRestController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> addNewGoods(@RequestBody Goods goods) {
-        goodsService.add(goods);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        if (goodsService.add(goods)) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "goodsId/{goodsId}", method = RequestMethod.PUT)
@@ -70,10 +74,15 @@ public class GoodsRestController {
         }
         goodsService.delete(goods);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
-
-
-
+    //for users goods list
+    @RequestMapping(value = "/available", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Goods>> getAllAvailableGoods() {
+        List<Goods> goodsList = goodsService.findAllAvailableGoods();
+        if (goodsList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(goodsList, HttpStatus.OK);
+    }
 
 }

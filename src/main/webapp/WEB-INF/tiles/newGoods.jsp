@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Olia
-  Date: 11.07.2016
-  Time: 12:58
-  To change this template use File | Settings | File Templates.
---%>
 
 <div class="ui-widget">
     <h3>Goods info</h3>

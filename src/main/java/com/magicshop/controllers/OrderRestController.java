@@ -17,10 +17,12 @@ import java.util.List;
 @RequestMapping(value = "/orders/")
 public class OrderRestController {
 
-
+    private final OrderService orderService;
 
     @Autowired
-    private OrderService orderService;
+    public OrderRestController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.GET)
     public ResponseEntity<Order> findById(@PathVariable int id) {
@@ -31,34 +33,20 @@ public class OrderRestController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-  /*  @RequestMapping(value = "/{userId}/", method = RequestMethod.GET)
-    public ResponseEntity<List<Order>> findByUser(@RequestBody User user) {
+    @RequestMapping( method = RequestMethod.POST)
+      public ResponseEntity<Void> createOrder(@RequestBody Order order) {
+          orderService.addOrder(order);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
-        List<Order> orderList = orderService.findByUser(user.getUserId());
-        if (orderList.isEmpty()) {
+    //UserOrders is an entity for visualisation orders
+    @RequestMapping(value = "userId/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserOrders>> findAllUserOrders(@PathVariable int userId) {
+        List<UserOrders> userOrders = orderService.findAllUserOrders(userId);
+        if (userOrders == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(orderList, HttpStatus.OK);
-    } */
-
-  @RequestMapping( method = RequestMethod.POST)
-    public ResponseEntity<Void> createOrder(@RequestBody Order order) {
-        orderService.addOrder(order);
-      return new ResponseEntity<>(HttpStatus.CREATED);
-  }
-  @RequestMapping(value = "userId/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<UserOrders>> findAllUserOrders(@PathVariable int userId) {
-      List<UserOrders> userOrders = orderService.findAllUserOrders(userId);
-      if (userOrders == null) {
-          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
-
-      System.out.println(userOrders);
-      return new ResponseEntity<>(userOrders, HttpStatus.OK);
-  }
-
-
-
-
+        return new ResponseEntity<>(userOrders, HttpStatus.OK);
+    }
 
 }

@@ -9,8 +9,6 @@
 <jsp:include page="home.jsp"/>
 <div class="modal fade" id="login-modal" role="dialog">
     <div class="modal-dialog">
-
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header" style="padding:35px 50px;">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
