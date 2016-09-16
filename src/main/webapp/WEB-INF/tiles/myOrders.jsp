@@ -1,15 +1,16 @@
 <style>
 
-    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-        /* background-color: #F1C40F; */
+   /* .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+        /* background-color: #F1C40F;
         background: #ec7063;
         cursor: pointer;
         color: #111111;
-    }
+    } */
 
-    .table-hover {
-        background-color: #e74c3c;
+    .table tbody tr:hover td{
+
         color: #111111;
+        cursor: default;
     }
 
 
@@ -21,21 +22,21 @@
     </table>
 
     <ul class="nav nav-tabs">
-        <li><a href="${pageContext.request.contextPath}/personalRoom">Goods list</a></li>
-        <li class="active"><a href="${pageContext.request.contextPath}/myOrders">My orders</a></li>
+        <li><a href="${pageContext.request.contextPath}/personal-room">Goods list</a></li>
+        <li class="active"><a href="${pageContext.request.contextPath}/my-orders">My orders</a></li>
     </ul>
 
 
    <div class="my-orders">
 
-       <table id="my-orders-list" class="table table-hover"
+       <table id="my-orders-list" class="table"
               data-search="true"
               data-query-params="queryParams">
            <thead>
            <tr>
                <th data-field="goodsName" data-sortable="true">Name</th>
-               <th data-field="quantity"  data-sortable="true">Quantity of orders</th>
-               <th data-field="quantityGoods" data-sortable="true">Quantity of goods</th>
+               <th data-field="quantity"  data-sortable="true">Orders Quantity</th>
+               <th data-field="quantityGoods" data-sortable="true">Goods Quantity</th>
            </tr>
            </thead>
        </table>

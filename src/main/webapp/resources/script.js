@@ -2,46 +2,43 @@
  * Created by Olia on 11.07.2016.
  */
 $(document).ready(function () {
-
     
     //Register new user to DB via REST
     $("#register-submit").click(function () {
         var userName = $("#register-name").val();
         var userEmail = $("#register-email").val();
         var userPassword = $("#register-password").val();
-            $.ajax({
-                url: "http://localhost:8080/users/email/" + userEmail,
-                dataType: 'json',
-                statusCode: {
-                    406: function () {
-                        var jsonObject = {
-                            "email": userEmail,
-                            "name": userName,
-                            "password": userPassword
-                        };
-                        $.ajax({
-                            type: "POST",
-                            url: "http://localhost:8080/users/",
-                            contentType: 'application/json; charset=utf-8',
-                            data: JSON.stringify(jsonObject),
-                            statusCode: {
-                                201: function () {
-                                    alert("Account was created");
-
-                                },
-                                400: function () {
-                                    alert("Something is wrong. Failed");
-                                }
+        $.ajax({
+            url: "http://localhost:8080/users/email/" + userEmail,
+            dataType: 'json',
+            statusCode: {
+                406: function () {
+                    var jsonObject = {
+                        "email": userEmail,
+                        "name": userName,
+                        "password": userPassword
+                    };
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/users/",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(jsonObject),
+                        statusCode: {
+                            201: function () {
+                                alert("Account was created");
+                                window.location = '/login'
+                            },
+                            400: function () {
+                                alert("Failed. Please, try again!");
                             }
-                        });
-
-                    },
-                    200: function () {
-                        alert("User with this email is already exist");
-                    }
+                        }
+                    });
+                },
+                200: function () {
+                    alert("User with this email is already exist");
                 }
-
-            });
+            }
+        });
     });
 
     
@@ -87,13 +84,14 @@ $(document).ready(function () {
                 statusCode: {
                     204: function () {
                         alert("User was " + massage);
+                        location.reload(true);
                     },
                     400: function () {
-                        alert("Error occurred");
+                        alert("Internal error occurred");
+                        location.reload(true);
                     }
                 }
             });
-            location.reload(true);
         });
     });
 
@@ -113,7 +111,6 @@ $(document).ready(function () {
                 $('#ok1').click(function () {
                     var limit1 = $('#limit1').val();
                     var offset1 = $('#offset1').val();
-
                     if (limit1 == "" && offset1 == "") {
                         grepFunc1 = function () {
                             return true;
@@ -134,6 +131,7 @@ $(document).ready(function () {
                     $table1.bootstrapTable('load', $.grep(data, grepFunc1));
                 });
                 $('#reset1').click(function () {
+
                     grepFunc = function () {
                         return true;
                     };
@@ -165,7 +163,6 @@ $(document).ready(function () {
                 $('#action-error1').html('<p>Please, enter correct data</p>').show();
                 return false;
             } else {
-
                 $.ajax({
                     url: 'http://localhost:8080/goods/name/' + goodsName,
                     dataType: 'json',
@@ -175,9 +172,18 @@ $(document).ready(function () {
                                 type: "POST",
                                 url: "http://localhost:8080/goods/",
                                 contentType: 'application/json; charset=utf-8',
-                                data: JSON.stringify(newGoods)
+                                data: JSON.stringify(newGoods),
+                                statusCode: {
+                                    201: function () {
+                                        alert('New goods with name: ' + goodsName + ' was created!');
+                                        location.reload(true);
+                                    },
+                                    404: function () {
+                                        alert('Error. Please, try again!');
+                                        location.reload(true);
+                                    }
+                                }
                             });
-                            location.reload(true);
                         },
                         200: function () {
                             $('#action-error1').html('<p>Goods with this name is already exist</p>').show();
@@ -231,11 +237,18 @@ $(document).ready(function () {
                 type: "PUT",
                 url: "http://localhost:8080/goods/goodsId/" + goodsId,
                 contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(updatedGoods)
+                data: JSON.stringify(updatedGoods),
+                statusCode: {
+                    404: function () {
+                        alert('Error! Goods was not updated');
+                        location.reload(true);
+                    },
+                    204: function () {
+                        alert('Success! Goods was updated!');
+                        location.reload(true);
+                    }
+                }
             });
-            $('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was updated!</p>' +
-                '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>').show();
-            location.reload(true);
 
         });
 
@@ -245,13 +258,19 @@ $(document).ready(function () {
                 type: "DELETE",
                 url: "http://localhost:8080/goods/goodsId/" + row.goodsId,
                 contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(currentGoods)
+                data: JSON.stringify(currentGoods),
+                statusCode: {
+                    404: function () {
+                        alert('Error');
+                        location.reload(true);
+                    },
+                    204: function () {
+                        alert('Success! Goods was deleted!');
+                        location.reload(true);
+                    }
+                }
             });
-            $('#action-success').html('<sprong>Success!</sprong>' + '<p>Goods was deleted!</p>' +
-                '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>').show();
-            location.reload(true);
         });
-
     });
 
     //Order goods for users
@@ -272,7 +291,6 @@ $(document).ready(function () {
                 show: true
             }
         );
-
         document.getElementById("quantity").addEventListener("change", function () {
             var quantity = $('#quantity').val();
             $("#money").html( quantity * row.price);
@@ -293,18 +311,227 @@ $(document).ready(function () {
                     type: "POST",
                     url: "http://localhost:8080/orders/",
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(newOrder)
+                    data: JSON.stringify(newOrder),
+                    statusCode: {
+                        201: function () {
+                            alert('Operation completed successfully!');
+                            location.reload(true);
+                        },
+                        204: function () {
+                            alert('Error! Please, try again!');
+                            location.reload(true);
+                        }
+                    }
                 });
-                $("#orderSuccess").show();
             } else {
                 $("#orderError").show();
             }
-            location.reload(true);
         });
-
     });
 
+
+    //todo try home page logic
+    var idUser = $('#id-user-home').val();
+    var counter = $('#page-load-counter').val();
+    var saleGoodsList;
+    $.ajax({
+        url: 'http://localhost:8080/goods/',
+        dataType: 'json',
+        success: function (data) {
+            saleGoodsList = data;
+            var filt = function (goods) {
+                if(goods.salePrice != 0) {
+                    goods.price = goods.salePrice;
+                }
+                return goods.quantity > 0;
+            };
+            saleGoodsList = $.grep(saleGoodsList, filt);
+
+            var goodsId75 = saleGoodsList[0].goodsId;
+            var name75 = saleGoodsList[0].name;
+            var description75 = saleGoodsList[0].description;
+            var quantity75 = saleGoodsList[0].quantity;
+            var price75 = saleGoodsList[0].salePrice;
+
+            var goodsId50 = saleGoodsList[1].goodsId;
+            var name50 = saleGoodsList[1].name;
+            var description50 = saleGoodsList[1].description;
+            var quantity50 = saleGoodsList[1].quantity;
+            var price50 = saleGoodsList[1].salePrice;
+
+            var goodsId35 = saleGoodsList[2].goodsId;
+            var name35 = saleGoodsList[2].name;
+            var description35 = saleGoodsList[2].description;
+            var quantity35 = saleGoodsList[2].quantity;
+            var price35 = saleGoodsList[2].salePrice;
+
+            $('#name-75').html("<strong>Name: </strong>" + name75);
+            $('#description-75').html("<strong>Description: </strong>" + description75);
+            $('#quantity-75').html("<strong>Quantity: </strong>" + quantity75);
+            $('#price-75').html("<strong>$</strong>" + price75);
+
+            $('#name-50').html("<strong>Name: </strong>" + name50);
+            $('#description-50').html("<strong>Description: </strong>" + description50);
+            $('#quantity-50').html("<strong>Quantity: </strong>" + quantity50);
+            $('#price-50').html("<strong>$</strong>" + price50);
+
+            $('#name-35').html("<strong>Name: </strong>" + name35);
+            $('#description-35').html("<strong>Description: </strong>" + description35);
+            $('#quantity-35').html("<strong>Quantity: </strong>" + quantity35);
+            $('#price-35').html("<strong>$</strong>" + price35);
+
+            $('#buy1').click(function () {
+                if(idUser == "") {
+                    window.location ='/login';
+                } else {
+                    var fillTable = '<thead><tr><th>Name</th>' +
+                        '<th>Description</th><th>Quantity</th><th>Price</th>' +
+                        '</tr></thead>'+'<tbody><tr><td>' +
+                        name75 + '</td><td>' +
+                        description75 + '</td><td>' +
+                        quantity75+ '</td><td>' +
+                        price75 + '</td></tr></tbody>';
+                    $('#selected-goods-for-order-home').html(fillTable);
+                    $('#money-home').html(price75);
+
+                    $("#order-modal-home").modal({
+                        show: true
+                    });
+                    document.getElementById("quantity-home").addEventListener("change", function () {
+                        var quantity = $('#quantity-home').val();
+                        $("#money-home").html( quantity * price75);
+                    });
+
+                    $("#order-it-home").click(function () {
+                        var finalQuantity = $('#quantity-home').val();
+
+                        if((finalQuantity > 0) && (finalQuantity <= quantity75)) {
+                            var newOrder = {
+                                "userId": idUser,
+                                "goodsId": goodsId75,
+                                "quantity": finalQuantity
+                            };
+                            $.ajax({
+                                type: "POST",
+                                url: "http://localhost:8080/orders/",
+                                contentType: 'application/json; charset=utf-8',
+                                data: JSON.stringify(newOrder)
+                            });
+                            window.location = '/myorders';
+                        } else {
+                            location.reload(true);
+                        }
+                    });
+                }
+
+            });
+
+            $('#buy2').click(function () {
+                if(idUser == "") {
+                    window.location ='/login';
+                } else {
+                    var fillTable = '<thead><tr><th>Name</th>' +
+                        '<th>Description</th><th>Quantity</th><th>Price</th>' +
+                        '</tr></thead>'+'<tbody><tr><td>' +
+                        name50 + '</td><td>' +
+                        description50 + '</td><td>' +
+                        quantity50+ '</td><td>' +
+                        price50 + '</td></tr></tbody>';
+                    $('#selected-goods-for-order-home').html(fillTable);
+                    $('#money-home').html(price50);
+
+
+                    $("#order-modal-home").modal({
+                        show: true
+                    });
+                    document.getElementById("quantity-home").addEventListener("change", function () {
+                        var quantity = $('#quantity-home').val();
+                        $("#money-home").html( quantity * price50);
+                    });
+
+                    $("#order-it-home").click(function () {
+                        var finalQuantity = $('#quantity-home').val();
+
+                        if((finalQuantity > 0) && (finalQuantity <= quantity50)) {
+                            var newOrder = {
+                                "userId": idUser,
+                                "goodsId": goodsId50,
+                                "quantity": finalQuantity
+                            };
+                            $.ajax({
+                                type: "POST",
+                                url: "http://localhost:8080/orders/",
+                                contentType: 'application/json; charset=utf-8',
+                                data: JSON.stringify(newOrder)
+                            });
+                            window.location = '/myorders';
+                        } else {
+                            location.reload(true);
+                        }
+                    });
+                }
+
+            });
+
+            $('#buy3').click(function () {
+                if(idUser == "") {
+                    window.location ='/login';
+                } else {
+                    var fillTable = '<thead><tr><th>Name</th>' +
+                        '<th>Description</th><th>Quantity</th><th>Price</th>' +
+                        '</tr></thead>'+'<tbody><tr><td>' +
+                        name35 + '</td><td>' +
+                        description35 + '</td><td>' +
+                        quantity35+ '</td><td>' +
+                        price35 + '</td></tr></tbody>';
+                    $('#selected-goods-for-order-home').html(fillTable);
+                    $('#money-home').html(price35);
+
+
+                    $("#order-modal-home").modal({
+                        show: true
+                    });
+                    document.getElementById("quantity-home").addEventListener("change", function () {
+                        var quantity = $('#quantity-home').val();
+                        $("#money-home").html( quantity * price35);
+                    });
+
+                    $("#order-it-home").click(function () {
+                        var finalQuantity = $('#quantity-home').val();
+
+                        if((finalQuantity > 0) && (finalQuantity <= quantity35)) {
+                            var newOrder = {
+                                "userId": idUser,
+                                "goodsId": goodsId35,
+                                "quantity": finalQuantity
+                            };
+                            $.ajax({
+                                type: "POST",
+                                url: "http://localhost:8080/orders/",
+                                contentType: 'application/json; charset=utf-8',
+                                data: JSON.stringify(newOrder)
+                            });
+                            window.location = '/myorders';
+                        } else {
+                            location.reload(true);
+                        }
+                    });
+                }
+
+            });
+        },
+        error: function(e) {
+            console.log(e.responseText);
+        }
+    });
+
+
+
+
+
 });
+
+
 
 
 

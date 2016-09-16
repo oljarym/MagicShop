@@ -17,8 +17,6 @@
             });
         });
 
-
-
         $("#new-goods-form").bootstrapValidator({
             err: {
                 container: '#message'
@@ -42,7 +40,7 @@
                             message: 'The goods description is required and cannot be empty'
                         },
                         stringLength: {
-                            min: 10,
+                            min: 5,
                             max: 200,
                             message: 'The goods description must contain 10-200 characters'
                         }
@@ -222,11 +220,11 @@
 
             <div class="form-group">
                 <span>Min price: </span>
-                <input id="limit" class="form-control w70" type="number" value="0">
+                <input id="limit" class="form-control w70" type="number" value="0" min="1">
             </div>
             <div class="form-group">
                 <span>Max price: </span>
-                <input id="offset" class="form-control w70" type="number" value="100">
+                <input id="offset" class="form-control w70" type="number" value="100" min="1">
             </div>
             <button id="ok" type="submit" class="btn btn-default">OK</button>
             <button id="reset" type="submit" class="btn btn-default">Reset filter</button>

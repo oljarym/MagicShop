@@ -35,11 +35,14 @@ public class OrderRestController {
 
     @RequestMapping( method = RequestMethod.POST)
       public ResponseEntity<Void> createOrder(@RequestBody Order order) {
+          if (order == null) {
+              return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+          }
           orderService.addOrder(order);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+          return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //UserOrders is an entity for visualisation orders
+
     @RequestMapping(value = "userId/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserOrders>> findAllUserOrders(@PathVariable int userId) {
         List<UserOrders> userOrders = orderService.findAllUserOrders(userId);

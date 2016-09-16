@@ -34,14 +34,15 @@
     <nav class="navbar navbar-inverse ">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand active" href="/">MAGIC SHOP</a>
+                <a class="navbar-brand active" href="/">  MAGIC SHOP</a>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/personalRoom" id="personal-room"><span>Personal Room</span></a></li>
-                <li><a href="${pageContext.request.contextPath}/allUsers"><span>Users</span></a> </li>
-                <li><a href="${pageContext.request.contextPath}/allGoods"><span>Edit Goods List</span></a> </li>
+                <li><a href="${pageContext.request.contextPath}/personal-room" id="personal-room"><span>Personal Room</span></a></li>
+                <li><a href="${pageContext.request.contextPath}/all-users"><span>Users</span></a> </li>
+                <li><a href="${pageContext.request.contextPath}/all-goods"><span>Edit Goods List</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li><a><span>ADMINISTRATOR</span></a></li>
                 <li><a href="${pageContext.request.contextPath}/logout" ><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
              </ul>
          </div>
@@ -51,12 +52,13 @@
     <nav class="navbar navbar-inverse ">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand active" href="/">MAGIC SHOP</a>
+                <a class="navbar-brand active" href="/"><span>MAGIC SHOP</span></a>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/personalRoom"><span>Personal Room</span></a></li>
+                <li><a href="${pageContext.request.contextPath}/personal-room"><span>Personal Room</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li><a><span>USER</span></a></li>
                 <li><a href="${pageContext.request.contextPath}/logout" ><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
             </ul>
         </div>
@@ -66,7 +68,7 @@
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand active" href="/">MAGIC SHOP</a>
+                <a class="navbar-brand active" href="/">  MAGIC SHOP</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="${pageContext.request.contextPath}/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>

@@ -32,6 +32,7 @@ public class GoodsService {
 
     @Transactional(readOnly = true)
     public Goods findByName(String name) {
+
         return goodsDao.findByName(name);
     }
 
@@ -51,18 +52,20 @@ public class GoodsService {
 
     private void rewritingSalePrices() {
         List<Goods> list = goodsDao.getSaleGoodsList();
-        for (Goods goods : list) {
-            goods.setSalePrice(0);
-            goodsDao.updateGoods(goods, goods.getGoodsId());
-        }
-        List<Goods> allGoods = this.sortByQuantity(goodsDao.findAllAvailableGoods());
+        if (list != null) {
+            for (Goods goods : list) {
+                goods.setSalePrice(0);
+                goodsDao.updateGoods(goods, goods.getGoodsId());
+            }
+            List<Goods> allGoods = this.sortByQuantity(goodsDao.findAllAvailableGoods());
 
-        list = allGoods.subList(0, 3);
-        double [] rate = {0.25, 0.5, 0.65}; // sales rate array
-        for (int j = 0; j < 3; j++) {
-            Goods g = list.get(j);
-            g.setSalePrice(g.getPrice() * rate[j]);
-            goodsDao.updateGoods(g, g.getGoodsId());
+            list = allGoods.subList(0, 3);
+            double[] rate = {0.25, 0.5, 0.65}; // sales rate array
+            for (int j = 0; j < 3; j++) {
+                Goods g = list.get(j);
+                g.setSalePrice(Math.round(g.getPrice() * rate[j]));
+                goodsDao.updateGoods(g, g.getGoodsId());
+            }
         }
     }
 

@@ -2,35 +2,29 @@
 
 <div class="container">
 
-
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="${pageContext.request.contextPath}/personalRoom">Goods list</a></li>
-        <li><a href="${pageContext.request.contextPath}/myOrders" id="user-orders">My orders</a></li>
+        <li class="active"><a data-toggle="tab" href="${pageContext.request.contextPath}/personalroom">Goods list</a></li>
+        <li><a href="${pageContext.request.contextPath}/myorders" id="user-orders">My orders</a></li>
     </ul>
-
-
 
     <table>
         <input type="hidden" value="${idUser}" id="id-user">
     </table>
-    <div class="alert alert-success" id="orderSuccess" style="display:none;">
+   <!-- <div class="alert alert-success" id="orderSuccess" style="display:none;">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         <strong>Success</strong>
-    </div>
-    <div class="alert alert-danger" id="orderError" style="display:none;">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Something wrong!!!</strong>
-    </div>
+    </div> -->
+
 
     <div id="toolbar1">
         <div class="form-inline" role="form">
             <div class="form-group">
                 <span>Limit: </span>
-                <input id="limit1" class="form-control w70" type="number" value="0">
+                <input id="limit1" class="form-control w70" type="number" value="0" min="1">
             </div>
             <div class="form-group">
                 <span>Offset: </span>
-                <input id="offset1" class="form-control w70" type="number" value="100">
+                <input id="offset1" class="form-control w70" type="number" value="100" min="1">
             </div>
             <button id="ok1" type="submit" class="btn btn-default">OK</button>
             <button id="reset1" type="submit" class="btn btn-danger btn-default">Reset filter</button>
@@ -60,10 +54,14 @@
                 <h4 class="modal-title">Payment for goods</h4>
             </div>
             <div class="modal-body">
+                <div class="alert alert-danger" id="orderError" style="display:none;">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Something wrong!!!</strong>
+                </div>
                 <table id="selected-goods-for-order" class="table table-bordered"></table>
                     <div class="form-group" >
                         <label for="quantity">Quantity</label>
-                        <input class="form-control" type="number" id="quantity" value="1" min="1">
+                        <input class="form-control" id="quantity" value="1" min="1" pattern="[1-9][0-9]*">
                     </div>
                     <div class="form-group">
                         <label for="money">Final price </label>

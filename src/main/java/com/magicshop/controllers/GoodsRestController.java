@@ -25,7 +25,7 @@ public class GoodsRestController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Goods>> getAllGoods() {
         List<Goods> goodsList = goodsService.findAll();
-        if (goodsList.isEmpty()) {
+        if (goodsList == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(goodsList, HttpStatus.OK);
@@ -51,20 +51,19 @@ public class GoodsRestController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> addNewGoods(@RequestBody Goods goods) {
-
         if (goodsService.add(goods)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "goodsId/{goodsId}", method = RequestMethod.PUT)
     public ResponseEntity<Void> updateGoods(@RequestBody Goods goods, @PathVariable int goodsId) {
         if (goods == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         goodsService.update(goods, goodsId);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "goodsId/{goodsId}", method = RequestMethod.DELETE)

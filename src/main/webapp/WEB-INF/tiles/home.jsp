@@ -14,6 +14,14 @@
         -webkit-animation-duration: 1s;
         visibility: visible;
     }
+    .container-fluid {
+        padding-top: 0;
+        width: 100%;
+    }
+    .carousel-inner img {
+        width: 100%;
+        margin: auto
+    }
 </style>
 <table>
     <input type="hidden" value="${idUser}" id="id-user-home">
@@ -116,7 +124,7 @@
                     <table id="selected-goods-for-order-home" class="table table-bordered"></table>
                     <div class="form-group" >
                         <label for="quantity-home">Quantity</label>
-                        <input class="form-control" type="number" id="quantity-home" value="1" min="1">
+                        <input class="form-control" type="number" id="quantity-home" value="1" min="1" pattern="[1-9][0-9]*">
                     </div>
                     <div class="form-group">
                         <label for="money-home">Final price </label>
@@ -137,205 +145,6 @@
 
 </div>
 
-<script>
-    $(document).ready(function () {
-        var idUser = $('#id-user-home').val();
-        var counter = $('#page-load-counter').val();
-        var saleGoodsList;
-        $.ajax({
-            url: 'http://localhost:8080/goods/',
-            dataType: 'json',
-            success: function (data) {
-                saleGoodsList = data;
-                var filt = function (goods) {
-                    if(goods.salePrice != 0) {
-                        goods.price = goods.salePrice;
-                    }
-                    return goods.quantity > 0;
-                };
-                saleGoodsList = $.grep(saleGoodsList, filt);
-
-                var goodsId75 = saleGoodsList[0].goodsId;
-                var name75 = saleGoodsList[0].name;
-                var description75 = saleGoodsList[0].description;
-                var quantity75 = saleGoodsList[0].quantity;
-                var price75 = saleGoodsList[0].salePrice;
-
-                var goodsId50 = saleGoodsList[1].goodsId;
-                var name50 = saleGoodsList[1].name;
-                var description50 = saleGoodsList[1].description;
-                var quantity50 = saleGoodsList[1].quantity;
-                var price50 = saleGoodsList[1].salePrice;
-
-                var goodsId35 = saleGoodsList[2].goodsId;
-                var name35 = saleGoodsList[2].name;
-                var description35 = saleGoodsList[2].description;
-                var quantity35 = saleGoodsList[2].quantity;
-                var price35 = saleGoodsList[2].salePrice;
-
-                $('#name-75').html("<strong>Name: </strong>" + name75);
-                $('#description-75').html("<strong>Description: </strong>" + description75);
-                $('#quantity-75').html("<strong>Quantity: </strong>" + quantity75);
-                $('#price-75').html("<strong>$</strong>" + price75);
-
-                $('#name-50').html("<strong>Name: </strong>" + name50);
-                $('#description-50').html("<strong>Description: </strong>" + description50);
-                $('#quantity-50').html("<strong>Quantity: </strong>" + quantity50);
-                $('#price-50').html("<strong>$</strong>" + price50);
-
-                $('#name-35').html("<strong>Name: </strong>" + name35);
-                $('#description-35').html("<strong>Description: </strong>" + description35);
-                $('#quantity-35').html("<strong>Quantity: </strong>" + quantity35);
-                $('#price-35').html("<strong>$</strong>" + price35);
-
-                $('#buy1').click(function () {
-                    if(idUser == "") {
-                        window.location ='/login';
-                    } else {
-                        var fillTable = '<thead><tr><th>Name</th>' +
-                                '<th>Description</th><th>Quantity</th><th>Price</th>' +
-                                '</tr></thead>'+'<tbody><tr><td>' +
-                                name75 + '</td><td>' +
-                                description75 + '</td><td>' +
-                                quantity75+ '</td><td>' +
-                                price75 + '</td></tr></tbody>';
-                        $('#selected-goods-for-order-home').html(fillTable);
-                        $('#money-home').html(price75);
-
-
-                        $("#order-modal-home").modal({
-                            show: true
-                        });
-                        document.getElementById("quantity-home").addEventListener("change", function () {
-                            var quantity = $('#quantity-home').val();
-                            $("#money-home").html( quantity * price75);
-                        });
-
-                        $("#order-it-home").click(function () {
-                            var finalQuantity = $('#quantity-home').val();
-
-                            if((finalQuantity > 0) && (finalQuantity <= quantity75)) {
-                                var newOrder = {
-                                    "userId": idUser,
-                                    "goodsId": goodsId75,
-                                    "quantity": finalQuantity
-                                };
-                                $.ajax({
-                                    type: "POST",
-                                    url: "http://localhost:8080/orders/",
-                                    contentType: 'application/json; charset=utf-8',
-                                    data: JSON.stringify(newOrder)
-                                });
-                                window.location = '/myOrders';
-                            } else {
-                                location.reload(true);
-                            }
-                        });
-                    }
-
-                });
-
-                $('#buy2').click(function () {
-                    if(idUser == "") {
-                        window.location ='/login';
-                    } else {
-                        var fillTable = '<thead><tr><th>Name</th>' +
-                                '<th>Description</th><th>Quantity</th><th>Price</th>' +
-                                '</tr></thead>'+'<tbody><tr><td>' +
-                                name50 + '</td><td>' +
-                                description50 + '</td><td>' +
-                                quantity50+ '</td><td>' +
-                                price50 + '</td></tr></tbody>';
-                        $('#selected-goods-for-order-home').html(fillTable);
-                        $('#money-home').html(price50);
-
-
-                        $("#order-modal-home").modal({
-                            show: true
-                        });
-                        document.getElementById("quantity-home").addEventListener("change", function () {
-                            var quantity = $('#quantity-home').val();
-                            $("#money-home").html( quantity * price50);
-                        });
-
-                        $("#order-it-home").click(function () {
-                            var finalQuantity = $('#quantity-home').val();
-
-                            if((finalQuantity > 0) && (finalQuantity <= quantity50)) {
-                                var newOrder = {
-                                    "userId": idUser,
-                                    "goodsId": goodsId50,
-                                    "quantity": finalQuantity
-                                };
-                                $.ajax({
-                                    type: "POST",
-                                    url: "http://localhost:8080/orders/",
-                                    contentType: 'application/json; charset=utf-8',
-                                    data: JSON.stringify(newOrder)
-                                });
-                                window.location = '/myOrders';
-                            } else {
-                                location.reload(true);
-                            }
-                        });
-                    }
-
-                });
-
-                $('#buy3').click(function () {
-                    if(idUser == "") {
-                        window.location ='/login';
-                    } else {
-                        var fillTable = '<thead><tr><th>Name</th>' +
-                                '<th>Description</th><th>Quantity</th><th>Price</th>' +
-                                '</tr></thead>'+'<tbody><tr><td>' +
-                                name35 + '</td><td>' +
-                                description35 + '</td><td>' +
-                                quantity35+ '</td><td>' +
-                                price35 + '</td></tr></tbody>';
-                        $('#selected-goods-for-order-home').html(fillTable);
-                        $('#money-home').html(price35);
-
-
-                        $("#order-modal-home").modal({
-                            show: true
-                        });
-                        document.getElementById("quantity-home").addEventListener("change", function () {
-                            var quantity = $('#quantity-home').val();
-                            $("#money-home").html( quantity * price35);
-                        });
-
-                        $("#order-it-home").click(function () {
-                            var finalQuantity = $('#quantity-home').val();
-
-                            if((finalQuantity > 0) && (finalQuantity <= quantity35)) {
-                                var newOrder = {
-                                    "userId": idUser,
-                                    "goodsId": goodsId35,
-                                    "quantity": finalQuantity
-                                };
-                                $.ajax({
-                                    type: "POST",
-                                    url: "http://localhost:8080/orders/",
-                                    contentType: 'application/json; charset=utf-8',
-                                    data: JSON.stringify(newOrder)
-                                });
-                                window.location = '/myOrders';
-                            } else {
-                                location.reload(true);
-                            }
-                        });
-                    }
-
-                });
-            },
-            error: function(e) {
-                console.log(e.responseText);
-            }
-        });
-
-    });
-</script>
 
 
 

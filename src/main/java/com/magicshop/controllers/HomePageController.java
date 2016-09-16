@@ -40,7 +40,7 @@ public class HomePageController {
 
 
 
-   @RequestMapping("/personalRoom")
+   @RequestMapping("/personal-room")
     public String showPersonalRoomPage(Model model, Principal principal ) {
         if(principal == null) {
             return "login";
@@ -53,15 +53,15 @@ public class HomePageController {
     }
 
 
-    @RequestMapping(value = "/allGoods")
+    @RequestMapping(value = "/all-goods")
     public String showGoodsListForAdmin() {
         return "allGoods";
     }
 
-    @RequestMapping(value = "/allUsers")
+    @RequestMapping(value = "/all-users")
     public String showUsersListForAdmin() {return "users";}
 
-    @RequestMapping(value = "/myOrders")
+    @RequestMapping(value = "/my-orders")
     public String showShopListForUser(Model model, Principal principal) {
         if(principal == null) {
             return "login";
