@@ -121,10 +121,12 @@
                     <h4 class="modal-title">Payment for goods</h4>
                 </div>
                 <div class="modal-body">
+                    <div id="order-error"></div>
                     <table id="selected-goods-for-order-home" class="table table-bordered"></table>
                     <div class="form-group" >
                         <label for="quantity-home">Quantity</label>
-                        <input class="form-control" type="number" id="quantity-home" value="1" min="1" pattern="[1-9][0-9]*">
+                        <input class="form-control" type="number" id="quantity-home" value="1" min="1" pattern="^\d+$">
+
                     </div>
                     <div class="form-group">
                         <label for="money-home">Final price </label>

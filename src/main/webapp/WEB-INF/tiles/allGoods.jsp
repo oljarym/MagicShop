@@ -130,7 +130,7 @@
         var $table = $('#admin-goods-list');
         var result;
         $.ajax({
-            url: 'http://localhost:8080/goods/',
+            url: '/goods/',
             dataType: 'json',
             success: function (data) {
                  $table.bootstrapTable({
@@ -179,7 +179,6 @@
 </script>
 
 <style>
-
 
     .flat-butt {
         width: 400px;

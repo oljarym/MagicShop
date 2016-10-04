@@ -1,6 +1,4 @@
-/**
- * Created by Olia on 11.07.2016.
- */
+
 $(document).ready(function () {
     
     //Register new user to DB via REST
@@ -9,7 +7,7 @@ $(document).ready(function () {
         var userEmail = $("#register-email").val();
         var userPassword = $("#register-password").val();
         $.ajax({
-            url: "http://localhost:8080/users/email/" + userEmail,
+            url: "/users/email/" + userEmail,
             dataType: 'json',
             statusCode: {
                 406: function () {
@@ -20,7 +18,7 @@ $(document).ready(function () {
                     };
                     $.ajax({
                         type: "POST",
-                        url: "http://localhost:8080/users/",
+                        url: "/users/",
                         contentType: 'application/json; charset=utf-8',
                         data: JSON.stringify(jsonObject),
                         statusCode: {
@@ -43,7 +41,7 @@ $(document).ready(function () {
 
     
     $.ajax({
-        url: 'http://localhost:8080/users/',
+        url: '/users/',
         dataType: 'json',
         success: function (data) {
             $('#admin-users-list').bootstrapTable({
@@ -80,7 +78,7 @@ $(document).ready(function () {
             }
             $.ajax({
                 type: "PUT",
-                url: "http://localhost:8080/users/" + action + row.userId,
+                url: "/users/" + action + row.userId,
                 statusCode: {
                     204: function () {
                         alert("User was " + massage);
@@ -99,7 +97,7 @@ $(document).ready(function () {
 
     // All goods list
         $.ajax({
-            url: 'http://localhost:8080/goods/available',
+            url: '/goods/available',
             dataType: 'json',
             success: function (data) {
                 var $table1 = $('#all-goods-list').bootstrapTable({
@@ -164,13 +162,13 @@ $(document).ready(function () {
                 return false;
             } else {
                 $.ajax({
-                    url: 'http://localhost:8080/goods/name/' + goodsName,
+                    url: '/goods/name/' + goodsName,
                     dataType: 'json',
                     statusCode: {
                         204: function () {
                             $.ajax({
                                 type: "POST",
-                                url: "http://localhost:8080/goods/",
+                                url: "/goods/",
                                 contentType: 'application/json; charset=utf-8',
                                 data: JSON.stringify(newGoods),
                                 statusCode: {
@@ -235,7 +233,7 @@ $(document).ready(function () {
             };
             $.ajax({
                 type: "PUT",
-                url: "http://localhost:8080/goods/goodsId/" + goodsId,
+                url: "/goods/goodsId/" + goodsId,
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(updatedGoods),
                 statusCode: {
@@ -256,7 +254,7 @@ $(document).ready(function () {
         $('#delete-goods-submit').click(function () {
             $.ajax({
                 type: "DELETE",
-                url: "http://localhost:8080/goods/goodsId/" + row.goodsId,
+                url: "/goods/goodsId/" + row.goodsId,
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(currentGoods),
                 statusCode: {
@@ -309,7 +307,7 @@ $(document).ready(function () {
                 };
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost:8080/orders/",
+                    url: "/orders/",
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(newOrder),
                     statusCode: {
@@ -330,12 +328,11 @@ $(document).ready(function () {
     });
 
 
-    //todo try home page logic
     var idUser = $('#id-user-home').val();
     var counter = $('#page-load-counter').val();
     var saleGoodsList;
     $.ajax({
-        url: 'http://localhost:8080/goods/',
+        url: '/goods/',
         dataType: 'json',
         success: function (data) {
             saleGoodsList = data;
@@ -380,6 +377,11 @@ $(document).ready(function () {
             $('#quantity-35').html("<strong>Quantity: </strong>" + quantity35);
             $('#price-35').html("<strong>$</strong>" + price35);
 
+            var isInt = function isInt(n) {
+                return n % 1 === 0;
+            };
+
+
             $('#buy1').click(function () {
                 if(idUser == "") {
                     window.location ='/login';
@@ -405,7 +407,7 @@ $(document).ready(function () {
                     $("#order-it-home").click(function () {
                         var finalQuantity = $('#quantity-home').val();
 
-                        if((finalQuantity > 0) && (finalQuantity <= quantity75)) {
+                        if ((finalQuantity > 0) && (finalQuantity <= quantity75) && (isInt(finalQuantity))) {
                             var newOrder = {
                                 "userId": idUser,
                                 "goodsId": goodsId75,
@@ -413,11 +415,11 @@ $(document).ready(function () {
                             };
                             $.ajax({
                                 type: "POST",
-                                url: "http://localhost:8080/orders/",
+                                url: "/orders/",
                                 contentType: 'application/json; charset=utf-8',
                                 data: JSON.stringify(newOrder)
                             });
-                            window.location = '/myorders';
+                            window.location = '/my-orders';
                         } else {
                             location.reload(true);
                         }
@@ -452,7 +454,7 @@ $(document).ready(function () {
                     $("#order-it-home").click(function () {
                         var finalQuantity = $('#quantity-home').val();
 
-                        if((finalQuantity > 0) && (finalQuantity <= quantity50)) {
+                        if((finalQuantity > 0) && (finalQuantity <= quantity50) && (isInt(finalQuantity))) {
                             var newOrder = {
                                 "userId": idUser,
                                 "goodsId": goodsId50,
@@ -460,11 +462,11 @@ $(document).ready(function () {
                             };
                             $.ajax({
                                 type: "POST",
-                                url: "http://localhost:8080/orders/",
+                                url: "/orders/",
                                 contentType: 'application/json; charset=utf-8',
                                 data: JSON.stringify(newOrder)
                             });
-                            window.location = '/myorders';
+                            window.location = '/my-orders';
                         } else {
                             location.reload(true);
                         }
@@ -499,7 +501,7 @@ $(document).ready(function () {
                     $("#order-it-home").click(function () {
                         var finalQuantity = $('#quantity-home').val();
 
-                        if((finalQuantity > 0) && (finalQuantity <= quantity35)) {
+                        if((finalQuantity > 0) && (finalQuantity <= quantity35 && (isInt(finalQuantity)))) {
                             var newOrder = {
                                 "userId": idUser,
                                 "goodsId": goodsId35,
@@ -507,26 +509,22 @@ $(document).ready(function () {
                             };
                             $.ajax({
                                 type: "POST",
-                                url: "http://localhost:8080/orders/",
+                                url: "/orders/",
                                 contentType: 'application/json; charset=utf-8',
                                 data: JSON.stringify(newOrder)
                             });
-                            window.location = '/myorders';
+                            window.location = '/my-orders';
                         } else {
                             location.reload(true);
                         }
                     });
                 }
-
             });
         },
         error: function(e) {
             console.log(e.responseText);
         }
     });
-
-
-
 
 
 });

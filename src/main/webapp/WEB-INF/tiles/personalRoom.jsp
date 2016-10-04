@@ -3,17 +3,13 @@
 <div class="container">
 
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="${pageContext.request.contextPath}/personalroom">Goods list</a></li>
-        <li><a href="${pageContext.request.contextPath}/myorders" id="user-orders">My orders</a></li>
+        <li class="active"><a data-toggle="tab" href="${pageContext.request.contextPath}/personal-room">Goods list</a></li>
+        <li><a href="${pageContext.request.contextPath}/my-orders" id="user-orders">My orders</a></li>
     </ul>
 
     <table>
         <input type="hidden" value="${idUser}" id="id-user">
     </table>
-   <!-- <div class="alert alert-success" id="orderSuccess" style="display:none;">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Success</strong>
-    </div> -->
 
 
     <div id="toolbar1">

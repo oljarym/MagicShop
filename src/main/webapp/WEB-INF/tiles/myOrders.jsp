@@ -1,18 +1,9 @@
 <style>
-
-   /* .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-        /* background-color: #F1C40F;
-        background: #ec7063;
-        cursor: pointer;
-        color: #111111;
-    } */
-
-    .table tbody tr:hover td{
+  .table tbody tr:hover td{
 
         color: #111111;
         cursor: default;
     }
-
 
 </style>
 
@@ -46,7 +37,7 @@
 <script>
     var userId = $('#id-user1').val();
     $.ajax({
-        url: 'http://localhost:8080/orders/userId/' + userId,
+        url: '/orders/userId/' + userId,
         success: function (data) {
             $('#my-orders-list').bootstrapTable({
                 data: data
