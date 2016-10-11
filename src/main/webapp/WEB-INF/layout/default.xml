@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+    <definition name="magic" template="/WEB-INF/templates/default.jsp">
+        <put-attribute name="title" value="Title"/>
+        <put-attribute name="header" value="/WEB-INF/tiles/header.jsp"/>
+        <put-attribute name="body"/>
+        <put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp"/>
+    </definition>
+
+    <definition name="home" extends="magic">
+        <put-attribute name="title" value="Magic Shop"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/home.jsp"/>
+    </definition>
+
+    <definition name="login" extends="magic">
+        <put-attribute name="title" value="Login"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/login.jsp"/>
+    </definition>
+
+    <definition name="register" extends="magic">
+        <put-attribute name="title" value="Register"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/register.jsp"/>
+    </definition>
+
+    <definition name="personalRoom" extends="magic">
+        <put-attribute name="title" value="Personal Room"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/personalRoom.jsp"/>
+    </definition>
+
+    <definition name="allGoods" extends="magic">
+        <put-attribute name="title" value="Edit Goods List"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/allGoods.jsp"/>
+    </definition>
+
+    <definition name="users" extends="magic">
+        <put-attribute name="title" value="All Users"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/users.jsp"/>
+    </definition>
+
+    <definition name="myOrders" extends="magic">
+        <put-attribute name="title" value="Shop"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/myOrders.jsp"/>
+    </definition>
+
+</tiles-definitions>
