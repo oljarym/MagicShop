@@ -6,6 +6,10 @@
           <option name="url" value="https://gitlab.globalmoney.ua/orymarchuk/gm-web.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://xp-dev.com/git/gmws" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="C:\Users\Olia\Desktop\WORK\GMWEB" />
